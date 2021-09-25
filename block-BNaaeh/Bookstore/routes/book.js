@@ -2,40 +2,82 @@ var express = require("express");
 var router = express.Router();
 var Book = require("../model/Book");
 
-//list all book
-router.get("/", (req, res, next) => {
-  Book.find({}, (err, book) => {
+//List Book
+router.get("/", async (req, res, next) => {
+  try {
+    var book = await Book.find({});
     res.status(200).json({ book });
-  });
-});
-// Get Single Book
-router.get("/:id", (req, res, next) => {
-  let id = req.params.id;
-  Book.findById(id, (err, book) => {
-    if (err) return next(err);
-    res.status(200).json({ book });
-  });
+    next();
+  } catch (error) {
+    return error;
+  }
 });
 
-// Ceate a book
-router.post("/", (req, res, next) => {
-  var data = req.body;
-  data.tags = data.tags.trim().split(",");
-  Book.create(data, (err, book) => {
-    if (err) return next(err);
-    res.status(200).json({ book });
-  });
+//create book
+router.get("/new", async (req, res, next) => {
+  try {
+    res.status(200).json({ message: "bookinfo" });
+  } catch (error) {
+    return error;
+  }
 });
 
-//   Edit a book
-router.put("/:id", (req, res, next) => {
+router.post("/", async (req, res, next) => {
+  try {
+    var book = await Book.create(req.body);
+    res.status(200).json({ book });
+    next();
+  } catch (error) {
+    return error;
+  }
+});
+
+//fetch single book
+router.get("/:id", async (req, res, next) => {
   var id = req.params.id;
-  var data = req.body;
-  data.tags = data.tags.trim().split(",");
-  Book.findByIdAndUpdate(id, data, (err, book) => {
-    if (err) return next(err);
+  try {
+    var book = await Book.findById(id);
     res.status(200).json({ book });
-  });
+    next();
+  } catch (error) {
+    return error;
+  }
+});
+
+//update book
+router.get("/:id/edit", async (req, res, next) => {
+  var id = req.params.id;
+  try {
+    var edit = await Book.findByIdAndUpdate(id);
+    res.status(200).json({ edit });
+    console.log(edit);
+    next();
+  } catch (error) {
+    return error;
+  }
+});
+
+router.put("/:id", async (req, res, next) => {
+  var id = req.params.id;
+  try {
+    var update = await Book.findByIdAndUpdate(id, req.body);
+    res.status(200).json({ update });
+    next();
+  } catch (error) {
+    return error;
+  }
+});
+
+//delete
+router.get("/:id/delete", async (req, res, next) => {
+  var id = req.params.id;
+  try {
+    var del = await Book.findByIdAndDelete(id);
+    res.status(200).json({ del });
+    next();
+  } catch (error) {
+    return error;
+  }
 });
 
 module.exports = router;
