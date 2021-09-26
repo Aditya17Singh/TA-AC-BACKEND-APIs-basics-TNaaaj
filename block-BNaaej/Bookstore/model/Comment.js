@@ -3,11 +3,10 @@ var Schema = mongoose.Schema;
 
 var commentSchema = new Schema(
   {
-    comment: { type: String, required: true },
-    author: { type: Schema },
+    content: { type: String, required: true },
     bookId: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "NewBook",
+      type: Schema.Types.ObjectId,
+      ref: "Book",
       required: true,
     },
   },

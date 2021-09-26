@@ -5,9 +5,11 @@ var bookSchema = new Schema(
   {
     title: { type: String, required: true },
     summary: { type: String, required: true },
-    tags: [{ type: String }],
+    category: [String],
+    tags: [String],
     author: { type: String },
     pages: { type: Number },
+    Comment: [{ type: Schema.Types.ObjectId, ref: "Comment" }],
   },
   { timestamps: true }
 );
