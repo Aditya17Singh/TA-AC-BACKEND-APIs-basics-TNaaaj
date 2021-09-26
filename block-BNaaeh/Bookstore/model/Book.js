@@ -7,6 +7,7 @@ var bookSchema = new Schema(
     summary: { type: String, required: true },
     author: { type: String },
     pages: { type: Number },
+    Comment: [{ type: Schema.Types.ObjectId, ref: "Comment" }],
   },
   { timestamps: true }
 );

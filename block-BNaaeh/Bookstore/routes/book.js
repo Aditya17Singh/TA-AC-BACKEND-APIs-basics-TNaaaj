@@ -1,6 +1,7 @@
 var express = require("express");
 var router = express.Router();
 var Book = require("../model/Book");
+var Comment = require("../model/Comment");
 
 //List Book
 router.get("/", async (req, res, next) => {
@@ -45,18 +46,6 @@ router.get("/:id", async (req, res, next) => {
 });
 
 //update book
-router.get("/:id/edit", async (req, res, next) => {
-  var id = req.params.id;
-  try {
-    var edit = await Book.findByIdAndUpdate(id);
-    res.status(200).json({ edit });
-    console.log(edit);
-    next();
-  } catch (error) {
-    return error;
-  }
-});
-
 router.put("/:id", async (req, res, next) => {
   var id = req.params.id;
   try {
@@ -69,12 +58,27 @@ router.put("/:id", async (req, res, next) => {
 });
 
 //delete
-router.get("/:id/delete", async (req, res, next) => {
+router.delete("/:id/delete", async (req, res, next) => {
   var id = req.params.id;
   try {
     var del = await Book.findByIdAndDelete(id);
     res.status(200).json({ del });
     next();
+  } catch (error) {
+    return error;
+  }
+});
+
+//Add Comment
+router.post("/:id/comment", async (req, res, next) => {
+  var id = req.params.id;
+  req.body.bookId = id;
+  try {
+    var comment = await Comment.create(req.body);
+    var book = await Book.findByIdAndUpdate(id, {
+      $push: { comment: comment._id },
+    });
+    res.status(200).json({ comment });
   } catch (error) {
     return error;
   }
